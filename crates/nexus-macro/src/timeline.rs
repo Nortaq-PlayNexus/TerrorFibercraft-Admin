@@ -187,7 +187,7 @@ impl MacroEngine {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use nexus_input::events::{Device, EventKind, InputEvent, KeyState};
+    use nexus_input::events::{Device, EventKind, InputEvent};
 
     fn key(kind: EventKind) -> InputEvent {
         InputEvent {

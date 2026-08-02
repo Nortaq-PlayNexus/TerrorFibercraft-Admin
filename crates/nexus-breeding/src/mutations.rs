@@ -53,14 +53,9 @@ pub fn apply_mutation(stat: Stat, parent_stat: f64) -> f64 {
 }
 
 /// Track mutations across generations.
+#[derive(Default)]
 pub struct MutationTracker {
     pub tames: Vec<Tame>,
-}
-
-impl Default for MutationTracker {
-    fn default() -> Self {
-        Self { tames: Vec::new() }
-    }
 }
 
 impl MutationTracker {

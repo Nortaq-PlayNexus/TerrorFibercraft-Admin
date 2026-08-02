@@ -103,10 +103,11 @@ impl CronExpr {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use chrono::{TimeZone, Utc};
 
     fn dt(s: &str) -> chrono::DateTime<chrono::Utc> {
-        Utc.datetime_from_str(s, "%Y-%m-%d %H:%M:%S").unwrap()
+        chrono::NaiveDateTime::parse_from_str(s, "%Y-%m-%d %H:%M:%S")
+            .unwrap()
+            .and_utc()
     }
 
     #[test]
