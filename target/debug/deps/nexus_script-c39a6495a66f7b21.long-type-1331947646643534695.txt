@@ -1,1 +1,0 @@
-Box<dyn for<'a, 'b> Fn(&'a [Value], &'b VmContext) -> Result<Value, VmError> + Send + Sync>: Clone
