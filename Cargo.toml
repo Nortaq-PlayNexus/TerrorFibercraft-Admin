@@ -11,6 +11,8 @@ members = [
     "crates/nexus-scheduler",
     "crates/nexus-market",
     "crates/nexus-selfimprove",
+    "crates/nexus-breeding",
+    "crates/nexus-model",
 ]
 
 [workspace.package]

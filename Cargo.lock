@@ -224,6 +224,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "nexus-breeding"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "serde",
+ "thiserror",
+]
+
+[[package]]
 name = "nexus-core"
 version = "0.1.0"
 dependencies = [
@@ -274,6 +283,15 @@ dependencies = [
  "serde",
  "serde_json",
  "sha2",
+ "thiserror",
+]
+
+[[package]]
+name = "nexus-model"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "serde_json",
  "thiserror",
 ]
 

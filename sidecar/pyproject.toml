@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nexus-vision"
+version = "0.1.0"
+description = "Vision & AI sidecar for ARK NEXUS X"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.26",
+    "Pillow>=10",
+]
+
+[project.optional-dependencies]
+yolo = ["onnxruntime>=1.17", "opencv-python>=4.9", "ultralytics>=8.0"]
+ocr = ["paddleocr>=2.7"]
+test = ["pytest>=8"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["nexus_vision*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
