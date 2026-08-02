@@ -1,0 +1,3 @@
+(dyn for<'a, 'b> Fn(&'a BlackboardView, &'b mut Vec<std::string::String>) -> Status + 'static)
+std::ptr::Unique<(dyn for<'a, 'b> Fn(&'a BlackboardView, &'b mut Vec<std::string::String>) -> Status + 'static)>
+Box<(dyn for<'a, 'b> Fn(&'a BlackboardView, &'b mut Vec<std::string::String>) -> Status + 'static)>

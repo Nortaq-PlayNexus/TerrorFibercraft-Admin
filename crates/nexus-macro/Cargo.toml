@@ -1,0 +1,12 @@
+[package]
+name = "nexus-macro"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+uuid = { workspace = true }
+nexus-input = { path = "../nexus-input" }
+nexus-core = { path = "../nexus-core" }
