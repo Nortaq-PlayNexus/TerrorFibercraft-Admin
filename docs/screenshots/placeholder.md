@@ -1,0 +1,1 @@
+# Screenshots\nPlace real captures in docs/screenshots/ and update README table.\n
