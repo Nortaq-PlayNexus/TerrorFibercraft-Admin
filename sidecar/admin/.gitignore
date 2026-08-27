@@ -1,0 +1,4 @@
+config.json
+last_batch.txt
+__pycache__/
+*.pyc

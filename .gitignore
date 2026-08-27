@@ -24,3 +24,6 @@ Thumbs.db
 *.key
 *.pem
 .env
+config.local.json
+cluster/cluster.local.json
+*.local.json

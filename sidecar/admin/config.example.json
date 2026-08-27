@@ -1,0 +1,22 @@
+{
+  "discord_token": "YOUR_DISCORD_BOT_TOKEN",
+  "nitrado_token": "YOUR_NITRADO_API_TOKEN",
+  "admin_role": "Admin",
+  "donate_message": "Support the cluster: https://tip4serv.com/your-store",
+  "servers": {
+    "island": {
+      "service_id": 123456,
+      "gameserver_id": 789,
+      "rcon_host": "111.222.333.444",
+      "rcon_port": 27020,
+      "rcon_password": "CHANGE_ME"
+    },
+    "ragnarok": {
+      "service_id": 123457,
+      "gameserver_id": 790,
+      "rcon_host": "111.222.333.445",
+      "rcon_port": 27020,
+      "rcon_password": "CHANGE_ME"
+    }
+  }
+}

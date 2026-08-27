@@ -1,0 +1,17 @@
+{
+  "name": "Terror Fibercraft 1000x",
+  "cluster_id": "TerrorFibercraft1000x",
+  "gamertag": "TerrorFibercraft",
+  "platform": "Xbox + Microsoft Store (Windows 10/11) CrossPlay — ASE ONLY",
+  "host": "Nitrado (only clustered host for MS-Store ASE)",
+  "mode": "Public cluster = PvP, private rented clusters = PvE (PvP add-on optional)",
+  "rates": "1000x",
+  "monetization": "Donations/tips + private managed hosting + cosmetic/community perks. NO pay-to-win (ARK EULA + Xbox ToS).",
+  "maps": [
+    "TheIsland", "ScorchedEarth", "Aberration", "Extinction",
+    "Ragnarok", "Valguero", "Genesis", "Genesis2",
+    "CrystalIsles", "TheCenter", "LostIsland"
+  ],
+  "expansion_candidates_free_ase": ["TheCenter", "LostIsland"],
+  "notes": "The Center & Lost Island are free ASE maps (valid 10->12 map expansion). Astraeos is ASA-only (paid DLC) and NOT part of this ASE cluster. Arkon does NOT support ASE on Nitrado; use BattleMetrics + this admin console instead."
+}
