@@ -27,10 +27,13 @@ USAGE
   python cave-spawn-generator.py gen --preset dino_gate
   python cave-spawn-generator.py gen --mode box --cols 9 --rows 6 --depth 9 \
         --hole behemoth --floor --ceiling --blueprint watervein --json
+  python cave-spawn-generator.py gen --preset uw_seal --map fjordur --lat 49.4 --lon 14.2
+  python cave-spawn-generator.py demo --preset dino_gate       # ASCII wall preview
   python cave-spawn-generator.py batch --file spots.json > walls.txt
   python cave-spawn-generator.py apply --host 1.2.3.4 --port 27020 \
         --password SECRET --file walls.txt
   python cave-spawn-generator.py list
+  python cave-spawn-generator.py list --json                    # machine-readable catalog
 """
 
 import argparse
@@ -69,13 +72,29 @@ HOLE_PRESETS = {
 }
 
 # Named shortcuts: --preset NAME expands to these gen options.
+# Coverage mirrors spawn-command-cookbook.md so the cookbook == the CLI:
+# holes (bare entrances), gates (full walls), sculpt recipes, and platforms.
 PRESETS = {
+    # bare entrances (small wall just around the hole)
+    "crouch_hole":  dict(mode="wall", cols=5, rows=4, hole="crouch"),
+    "stego_hole":   dict(mode="wall", cols=7, rows=5, hole="stego"),
+    "dino_hole":    dict(mode="wall", cols=9, rows=6, hole="dino"),
+    "behemoth_hole":dict(mode="wall", cols=9, rows=14, hole="behemoth"),
+    # full seal walls (legacy aliases kept)
     "crouch_wall":  dict(mode="wall", cols=5, rows=4, hole="crouch"),
     "stego_wall":   dict(mode="wall", cols=7, rows=5, hole="stego"),
     "dino_gate":    dict(mode="wall", cols=9, rows=6, hole="dino"),
-    "behemoth_gate":dict(mode="wall", cols=11, rows=7, hole="behemoth"),
-    "plateau_box":  dict(mode="box", cols=9, rows=6, depth=9, hole="dino", floor=True),
+    "behemoth_gate":dict(mode="wall", cols=9, rows=14, hole="behemoth"),
+    # underwater seals / pockets
+    "uw_seal":      dict(mode="wall", cols=9, rows=6, hole="dino", zstart=-400),
+    "uw_pocket":    dict(mode="wall", cols=9, rows=6, hole="dino", zstart=-600),
+    # sculpt recipes from spawn-command-cookbook.md §5
+    "canyon_choke": dict(mode="wall", cols=9, rows=6, hole="dino"),
+    "cliff_hollow": dict(mode="wall", cols=9, rows=6, hole="stego"),
     "ruin_plug":    dict(mode="wall", cols=3, rows=3, hole="crouch"),
+    "ruin_fill":    dict(mode="wall", cols=5, rows=4, hole="stego"),
+    "plateau_box":  dict(mode="box", cols=9, rows=6, depth=9, hole="dino", floor=True),
+    "floating_island": dict(mode="platform", depth=8, cols=8),
     "platform":     dict(mode="platform", depth=8, cols=8),
 }
 
@@ -154,6 +173,20 @@ def build_commands(args):
     sp = args.spacing
     lines = []
     meta = dict(mode=args.mode, blueprint=args.blueprint, spacing=sp)
+    if args.mode in ("wall", "box") and args.cols <= 0 or args.rows <= 0:
+        raise SystemExit("ERROR: cols and rows must be positive integers for wall/box mode")
+    if args.mode == "box" and args.depth <= 0:
+        raise SystemExit("ERROR: depth must be positive for box mode")
+    if args.hole != "none":
+        hc, hr = hole_cells(args.hole, sp)
+        # A hole may exactly fill a dimension (a full-height/full-width gateway is
+        # a legitimate build). Reject only when the hole is strictly LARGER than
+        # the grid, which would collapse the surrounding wall into a single point.
+        if args.mode in ("wall", "box") and (hc > args.cols or hr > args.rows):
+            raise SystemExit(
+                f"ERROR: hole '{args.hole}' needs ~{hc}x{hr} cells but "
+                f"the {args.mode} grid is {args.cols}x{args.rows}. "
+                f"Increase cols/rows or pick a smaller hole.")
     if args.mode == "wall":
         lines += emit_wall(bp, args.cols, args.rows, sp, args.forward,
                            args.zstart, args.hole, "WALL")
@@ -189,10 +222,34 @@ def cmd_gen(args):
             setattr(args, k, v)
     if not args.mode:
         raise SystemExit("ERROR: --mode is required (or use --preset NAME)")
+    # optional pipe: prepend a teleport so the batch drops exactly where you convert
+    if args.map is not None:
+        if args.lat is None or args.lon is None:
+            raise SystemExit("ERROR: --map requires --lat and --lon (pipe mode)")
+        if args.map not in MAP_TRANSFORMS:
+            raise SystemExit("map must be one of: " + ", ".join(MAP_TRANSFORMS))
+        if not (0.0 <= float(args.lat) <= 100.0) or not (0.0 <= float(args.lon) <= 100.0):
+            raise SystemExit("ERROR: lat/lon must be valid map coordinates 0..100.")
     lines, meta = build_commands(args)
     if args.json:
-        print(json.dumps({"meta": meta, "commands": lines}, indent=2))
+        payload = {"meta": meta, "commands": lines}
+        if args.map is not None:
+            slat, slon, mlat, mlon, approx = MAP_TRANSFORMS[args.map]
+            payload["setplayerpos"] = {
+                "map": args.map, "lat": args.lat, "lon": args.lon,
+                "x": round((args.lon - slon) * mlon),
+                "y": round((args.lat - slat) * mlat),
+                "approx": bool(approx),
+            }
+        print(json.dumps(payload, indent=2))
     else:
+        if args.map is not None:
+            slat, slon, mlat, mlon, approx = MAP_TRANSFORMS[args.map]
+            print(f"# {args.map}: Lat {args.lat}, Lon {args.lon}"
+                  + ("  # APPROXIMATE" if approx else ""))
+            print(f"cheat setplayerpos {(args.lon - slon) * mlon:.0f} "
+                  f"{(args.lat - slat) * mlat:.0f} {args.z or 0:.0f}")
+            print()
         text = "\n".join(lines)
         if args.out:
             with open(args.out, "w") as f:
@@ -205,6 +262,10 @@ def cmd_gen(args):
 def cmd_convert(args):
     if args.map not in MAP_TRANSFORMS:
         raise SystemExit("map must be one of: " + ", ".join(MAP_TRANSFORMS))
+    if not (0.0 <= args.lat <= 100.0) or not (0.0 <= args.lon <= 100.0):
+        raise SystemExit(
+            f"ERROR: lat/lon must be valid map coordinates 0..100, got "
+            f"lat={args.lat}, lon={args.lon}.")
     slat, slon, mlat, mlon, approx = MAP_TRANSFORMS[args.map]
     x = (args.lon - slon) * mlon
     y = (args.lat - slat) * mlat
@@ -215,6 +276,13 @@ def cmd_convert(args):
 
 
 def cmd_list(args):
+    if getattr(args, "json", False):
+        print(json.dumps({
+            "blueprints": sorted(BLUEPRINTS),
+            "presets": {k: v for k, v in sorted(PRESETS.items())},
+            "maps": {k: {"approx": v[4]} for k, v in sorted(MAP_TRANSFORMS.items())},
+        }, indent=2))
+        return
     print("BLUEPRINTS:")
     for k in BLUEPRINTS:
         print(f"  {k}")
@@ -224,6 +292,44 @@ def cmd_list(args):
     print("\nMAPS (convert):")
     for k, v in MAP_TRANSFORMS.items():
         print(f"  {k} (approx={v[4]})")
+
+
+def demo_lines(preset):
+    """ASCII grid preview of a named preset → list of lines (no printing)."""
+    p = PRESETS.get(preset)
+    if not p:
+        raise SystemExit(f"Unknown preset '{preset}'. Choices: {', '.join(PRESETS)}")
+    cols = p.get("cols", 7)
+    rows = p.get("rows", 5)
+    sp = p.get("spacing", 400)
+    depth = p.get("depth")
+    hole = p.get("hole", "none")
+    hc, hr = hole_cells(hole, sp) if hole != "none" else (0, 0)
+    hc0 = (cols - hc) // 2
+    hr0 = (rows - hr) // 2
+    out = [f"preset '{preset}' — mode {p.get('mode', '?')}"]
+    out.append(f"  grid   {cols} cols x {rows} rows @ {sp} cm/cell" +
+               (f"; depth {depth} cells" if depth else ""))
+    if hole != "none":
+        w_cm, h_cm = HOLE_PRESETS[hole]
+        out.append(f"  hole   '{hole}' {w_cm}x{h_cm} cm = ~{hc}c x {hr}r, centered")
+    out.append("+" + "-" * cols + "+")
+    for r in range(rows):
+        row = "|"
+        for c in range(cols):
+            in_hole = hole != "none" and hc0 <= c < hc0 + hc and hr0 <= r < hr0 + hr
+            row += "." if in_hole else "#"
+        out.append(row + "|")
+    out.append("+" + "-" * cols + "+")
+    out.append("Legend:  # = placed terminal  . = entrance hole")
+    out.append(f"Commands: {cols * rows - hc * hr} spawnactor lines "
+               f"(produced by: `gen --preset {preset}`)")
+    return out
+
+
+def cmd_demo(args):
+    """ASCII preview of a named preset: grid dimensions + where the hole sits."""
+    print("\n".join(demo_lines(args.preset)))
 
 
 def cmd_batch(args):
@@ -301,6 +407,11 @@ def build_parser():
                    help="named shortcut; overrides cols/rows/mode/hole")
     g.add_argument("--json", action="store_true", help="emit JSON instead of text")
     g.add_argument("--out", default=None, help="write to file instead of stdout")
+    g.add_argument("--map", default=None,
+                   help="pipe mode: prepend setplayerpos for this map (needs --lat/--lon)")
+    g.add_argument("--lat", type=float, default=None, help="pipe mode latitude")
+    g.add_argument("--lon", type=float, default=None, help="pipe mode longitude")
+    g.add_argument("--z", type=float, default=0, help="pipe mode altitude (cm)")
     g.set_defaults(func=cmd_gen)
 
     c = sub.add_parser("convert", help="lat/lon -> setplayerpos")
@@ -311,7 +422,12 @@ def build_parser():
     c.set_defaults(func=cmd_convert)
 
     l = sub.add_parser("list", help="list blueprints, presets, maps")
+    l.add_argument("--json", action="store_true", help="emit JSON instead of text")
     l.set_defaults(func=cmd_list)
+
+    d = sub.add_parser("demo", help="ASCII preview of a named preset grid")
+    d.add_argument("--preset", required=True, choices=list(PRESETS))
+    d.set_defaults(func=cmd_demo)
 
     b = sub.add_parser("batch", help="generate many spots from a JSON file")
     b.add_argument("--file", required=True, help="JSON: dict or list of spot objects")
