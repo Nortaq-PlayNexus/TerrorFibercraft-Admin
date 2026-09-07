@@ -1,8 +1,29 @@
-# TerrorFibercraft-Admin
+<p align="center">
+  <img src="https://img.shields.io/badge/TERROR%20FIBERCRAFT-ADMIN%20CONSOLE-ff4d00?style=flat-square&labelColor=0a0e1a" alt="fibercraft" />
+</p>
 
-**Cluster admin console for _Terror Fibercraft 1000x_** — an ARK: Survival Evolved
-(ASE) cluster on **Xbox + Microsoft Store (Windows 10/11) CrossPlay only**, hosted on
-**Nitrado**, public = PvP, private rented = PvE. Rates 1000x. Donations-only / no pay-to-win.
+# TERROR FIBERCRAFT :: CLUSTER ADMIN CONSOLE
+
+**Cluster admin console for _Terror Fibercraft 1000x_** — an ARK: Survival Evolved (ASE) cluster on **Xbox + Microsoft Store (Windows 10/11) CrossPlay only**, hosted on **Nitrado**, public = PvP, private rented = PvE. Rates 1000x. Donations-only / no pay-to-win.
+
+<p align="center">
+  <img src="https://img.shields.io/badge/SHELL-TAURI%20%2F%20RUST-ffc430?style=flat-square&logo=rust&logoColor=ffc430&labelColor=0a0e1a" alt="rust"/>
+  <img src="https://img.shields.io/badge/UI-REACT-3dd5ff?style=flat-square&logo=react&logoColor=3dd5ff&labelColor=0a0e1a" alt="react"/>
+  <img src="https://img.shields.io/badge/ADMIN-NITRADO%20%2B%20RCON-00E5FF?style=flat-square&labelColor=0a0e1a" alt="nitrado"/>
+  <img src="https://img.shields.io/badge/CLUSTER-XBOX%20%2F%20MS%20STORE-00E5FF?style=flat-square&labelColor=0a0e1a" alt="xbox"/>
+  <img src="https://img.shields.io/badge/RATES-1000x-B8FF1E?style=flat-square&labelColor=0a0e1a" alt="rates"/>
+</p>
+
+<pre>
+IDENT ......... FIBER-01
+CLASS ......... ARK CLUSTER ADMIN CONSOLE
+STATUS ........ ONLINE / ACTIVE
+CLUSTER ....... TERROR FIBERCRAFT 1000X · XBOX/MS CROSSPLAY
+STACK ......... TAURI + REACT + PYTHON SIDECAR
+LINK .......... /TerrorFibercraft-Admin
+</pre>
+
+---
 
 This is a desktop `.exe` (Tauri: Rust core + React shell + Python sidecar) that gives
 cluster admins one place to: sculpt custom caves/terrain, drive Nitrado + RCON, and run
