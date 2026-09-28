@@ -63,6 +63,6 @@ mod tests {
         let now = chrono::Utc::now().timestamp_millis();
         bb.set("world.night", json!(false), "vision");
         let stale = bb.get_stale_ms("world.night", now + 5000).unwrap();
-        assert!(stale >= 4000 && stale <= 6000, "stale={stale}");
+        assert!((4000..=6000).contains(&stale), "stale={stale}");
     }
 }

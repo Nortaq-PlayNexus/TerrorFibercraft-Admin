@@ -200,7 +200,7 @@ mod tests {
         let m = ProducerId::new(ProducerKind::Script, "spam");
         // burst cap is 60; events sent at the same instant exceed it
         let mut ok = 0;
-        for i in 0..100 {
+        for _ in 0..100 {
             let e = ev(m.clone());
             if eng.send(vec![e], 100.0).is_ok() {
                 ok += 1;

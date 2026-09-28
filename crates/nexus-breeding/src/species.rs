@@ -1,4 +1,4 @@
-use chrono::{Duration, Utc};
+use chrono::Duration;
 use serde::{Deserialize, Serialize};
 
 /// Species maturation/imprint characteristics (subset of doc 07 tables).
