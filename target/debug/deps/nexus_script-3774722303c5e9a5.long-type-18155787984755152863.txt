@@ -1,0 +1,4 @@
+dyn for<'a, 'b> Fn(&'a [value::Value], &'b VmContext) -> Result<value::Value, value::VmError> + Send + Sync
+dyn for<'a, 'b> Fn(&'a [value::Value], &'b VmContext) -> Result<value::Value, value::VmError> + Send + Sync: Clone
+Box<dyn for<'a, 'b> Fn(&'a [value::Value], &'b VmContext) -> Result<value::Value, value::VmError> + Send + Sync>: Clone
+Box<dyn for<'a, 'b> Fn(&'a [value::Value], &'b VmContext) -> Result<value::Value, value::VmError> + Send + Sync>

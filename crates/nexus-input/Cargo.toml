@@ -1,0 +1,9 @@
+[package]
+name = "nexus-input"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+serde = { workspace = true }
+thiserror = { workspace = true }
+nexus-core = { path = "../nexus-core" }

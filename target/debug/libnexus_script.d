@@ -1,0 +1,1 @@
+C:\Users\natha\ArkNexusX\target\debug\libnexus_script.rlib: C:\Users\natha\ArkNexusX\crates\nexus-script\src\compile.rs C:\Users\natha\ArkNexusX\crates\nexus-script\src\lex.rs C:\Users\natha\ArkNexusX\crates\nexus-script\src\lib.rs C:\Users\natha\ArkNexusX\crates\nexus-script\src\value.rs C:\Users\natha\ArkNexusX\crates\nexus-script\src\vm.rs
