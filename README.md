@@ -39,7 +39,7 @@ the community Discord bot — all pre-loaded with the Terror Fibercraft setup.
 ## What's in here (the "best of everything")
 
 | Source | Reused for | Location |
-|---\n---\n\n## Screenshots\n\n| Preview | Description |\n|---------|-------------|\n| ![screenshot](docs/screenshots/screenshot.png) | Main interface |\n| ![screenshot](docs/screenshots/demo.gif) | Demo |\n\n*Screenshots coming soon — placeholders auto-generated. Replace docs/screenshots/ with real captures.*\n-----|-----------|----------|
+|--------|-----------|----------|
 | ArkNexusX | Tauri desktop `.exe` shell + Python sidecar infra | `src-tauri/`, `frontend/`, `sidecar/` |
 | TerrorFibercraft_1000x docs | Cluster configs, rates, maps, spawn cookbook | `cluster/` |
 | cave-spawn-generator (v2) | Custom-cave / sculpt command builder w/ presets | `sidecar/admin/cave_spawn_generator.py` |
@@ -95,3 +95,8 @@ docs/           Architecture & runbooks
 
 ## License
 MIT (inherited). Cluster branding © Terror Fibercraft.
+
+
+## Screenshot status
+
+Application captures are not included in this checkout. Add screenshots from a documented run before presenting a visual demonstration.
